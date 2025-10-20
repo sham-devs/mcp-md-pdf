@@ -135,19 +135,34 @@ class MarkdownConverter:
         pdf_path = os.path.abspath(pdf_path)
 
         # Check if Pandoc is available (best option if present)
+        pandoc_error = None
         if shutil.which('pandoc'):
             try:
                 return self._word_to_pdf_pandoc(docx_path, pdf_path)
-            except Exception:
+            except Exception as e:
+                # Store Pandoc error for later reporting
+                pandoc_error = str(e)
                 # Fall back to platform-specific methods if Pandoc fails
                 pass
 
         if platform.system() == "Windows":
             # Windows: Use Microsoft Word COM automation
-            return self._word_to_pdf_windows(docx_path, pdf_path)
+            try:
+                return self._word_to_pdf_windows(docx_path, pdf_path)
+            except Exception as e:
+                # If Pandoc also failed, report both errors
+                if pandoc_error:
+                    raise Exception(f"PDF conversion failed.\n\nPandoc error: {pandoc_error}\n\nWindows Word error: {e}")
+                raise
         else:
             # Linux/macOS: Use LibreOffice headless mode
-            return self._word_to_pdf_libreoffice(docx_path, pdf_path)
+            try:
+                return self._word_to_pdf_libreoffice(docx_path, pdf_path)
+            except Exception as e:
+                # If Pandoc also failed, report both errors
+                if pandoc_error:
+                    raise Exception(f"PDF conversion failed.\n\nPandoc error: {pandoc_error}\n\nLibreOffice error: {e}")
+                raise
 
     def _word_to_pdf_windows(self, docx_path: str, pdf_path: str) -> bool:
         """Convert Word to PDF using Microsoft Word COM automation (Windows only)"""
