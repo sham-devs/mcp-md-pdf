@@ -51,6 +51,21 @@ pip install -e .
 pip install md-pdf-mcp
 ```
 
+### Option 3: Using Docker
+
+```bash
+# Build the Docker image
+docker build -t md-pdf-mcp .
+
+# Run with Docker
+docker run -i md-pdf-mcp
+
+# Or use docker-compose
+docker-compose up -d
+```
+
+**Note:** Docker container supports **DOCX conversion only**. PDF conversion requires Windows + Microsoft Word, which is not available in Linux containers.
+
 ---
 
 ## **Configuration**

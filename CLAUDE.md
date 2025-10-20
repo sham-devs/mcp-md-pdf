@@ -73,6 +73,26 @@ python -m md_pdf_mcp.server
 npx @modelcontextprotocol/inspector python -m md_pdf_mcp.server
 ```
 
+### Docker
+
+```bash
+# Build Docker image
+docker build -t md-pdf-mcp .
+
+# Run container interactively
+docker run -i md-pdf-mcp
+
+# Use docker-compose
+docker-compose up -d     # Start in background
+docker-compose down      # Stop
+docker-compose logs      # View logs
+
+# Run tests in Docker
+docker run --rm md-pdf-mcp pytest -m "not slow"
+```
+
+**Note:** Docker supports DOCX conversion only (PDF requires Windows + MS Word).
+
 ## Architecture Details
 
 ### Two-Layer Conversion System
