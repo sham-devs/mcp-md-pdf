@@ -4,15 +4,17 @@ This document compares different Docker base images for PDF conversion.
 
 ## TL;DR - Key Finding
 
-**The original Debian + LibreOffice (1.14 GB) is the SMALLEST and BEST option.**
+**🎉 BREAKTHROUGH: Using official pandoc/latex image = 10% smaller than Debian!**
 
-We tested 4 different approaches expecting Alpine or Pandoc to be smaller:
-- ✅ **Debian + LibreOffice**: 1.14 GB (baseline, **WINNER**)
-- ❌ **Pandoc + Debian**: 1.35 GB (+18% larger due to 753 MB TeXLive packages)
-- ❌ **Pandoc + Alpine**: 1.42 GB (+25% larger, Alpine provides NO advantage)
-- ❌ **Alpine + LibreOffice**: 2.02 GB (+77% larger due to bundled dependencies)
+We tested 7 different approaches including official Docker images:
+- ✅ **md-pdf-mcp:pandoc-official**: 1.03 GB (uses official `pandoc/latex` base) **WINNER!**
+- ✅ **Debian + LibreOffice**: 1.14 GB (previous best, still good option)
+- ❌ **Pandoc + Debian** (our build): 1.35 GB (+32% larger due to inefficient TeXLive install)
+- ❌ **Pandoc + Alpine** (our build): 1.42 GB (+38% larger)
+- ❌ **Alpine + LibreOffice**: 2.02 GB (+96% larger)
+- ❌ **libreofficedocker/libreoffice-unoserver**: 2.64 GB (+156% larger!)
 
-**Conclusion:** Debian has the most optimized LibreOffice packaging. Stick with the default `Dockerfile`.
+**Conclusion:** Official pandoc/latex image (782 MB) + Python (250 MB) = **smallest full-featured image!**
 
 ---
 
@@ -99,14 +101,17 @@ All Python libraries for DOCX→PDF conversion require external dependencies:
 
 ## Actual Test Results
 
-We built and tested **FOUR** options to find the optimal Docker image size:
+We built and tested **SEVEN** options including official Docker images:
 
-| Image | Expected Size | Actual Size | vs Debian | Result |
-|-------|--------------|-------------|-----------|--------|
-| **Debian + LibreOffice** | 1.14 GB | **1.14 GB** | baseline | ✅ WINNER |
-| Pandoc + Debian | 200-300 MB | **1.35 GB** | +18% | ❌ Larger |
-| Pandoc + Alpine | 150-200 MB | **1.42 GB** | +25% | ❌ Larger |
-| Alpine + LibreOffice | 400-600 MB | **2.02 GB** | +77% | ❌ Much larger |
+| Image | Expected | Actual | vs Best | Result |
+|-------|----------|--------|---------|--------|
+| **md-pdf-mcp:pandoc-official** | ~1.0 GB | **1.03 GB** | baseline | ✅ **WINNER** |
+| pandoc/latex (base only) | N/A | **782 MB** | N/A | Base image |
+| Debian + LibreOffice | 1.14 GB | **1.14 GB** | +11% | ✅ Good alternative |
+| Pandoc + Debian (our build) | 200-300 MB | **1.35 GB** | +31% | ❌ Inefficient |
+| Pandoc + Alpine (our build) | 150-200 MB | **1.42 GB** | +38% | ❌ Inefficient |
+| Alpine + LibreOffice | 400-600 MB | **2.02 GB** | +96% | ❌ Much larger |
+| libreofficedocker/libreoffice-unoserver | Unknown | **2.64 GB** | +156% | ❌ Largest |
 
 ### Why the Surprises?
 
@@ -133,59 +138,101 @@ We built and tested **FOUR** options to find the optimal Docker image size:
 - Shared system dependencies (fonts, Java)
 - LibreOffice uses system libraries efficiently
 
+**md-pdf-mcp:pandoc-official (1.03 GB) - THE WINNER:**
+- Uses official `pandoc/latex:latest` (782 MB Alpine-based image)
+- Official Pandoc team optimized TeXLive installation
+- Python layer adds only ~250 MB
+- **10% smaller than Debian + LibreOffice**
+- Best of both worlds: small base + full features
+
+**libreofficedocker/libreoffice-unoserver (2.64 GB) - LARGEST:**
+- Official LibreOffice image but not optimized for size
+- Includes unoserver REST API (extra overhead)
+- Based on Alpine but still massive due to full LibreOffice stack
+
 ## Recommendation
 
-**Use Debian + LibreOffice (Dockerfile)** for ALL deployments:
+**🏆 Use Official Pandoc Image (Dockerfile.pandoc-official)** for NEW deployments:
 
-1. **Smallest image**: 1.14 GB (smallest of all tested options!)
-2. **Most tested**: Proven LibreOffice packaging since 2003
-3. **Best compatibility**: Full font and document support
-4. **Fastest builds**: Debian APT cache is optimized
-5. **Most reliable**: LibreOffice headless mode is industry standard
+```dockerfile
+FROM pandoc/latex:latest
+# ... install Python and dependencies
+```
 
-**Why NOT use alternatives?**
+**Advantages:**
+1. **Smallest image**: 1.03 GB (10% smaller than Debian!)
+2. **Official Pandoc**: Maintained by Pandoc team, always up-to-date
+3. **Optimized TeXLive**: Minimal LaTeX packages, expertly selected
+4. **Cross-platform**: Same Pandoc behavior on all systems
+5. **Well-maintained**: Updated regularly with security patches
 
-- **Alpine + LibreOffice**: 77% larger (2.02 GB) due to bundled dependencies
-- **Pandoc + Debian**: 18% larger (1.35 GB) due to massive TeXLive packages
-- **Pandoc + Alpine**: 25% larger (1.42 GB) - Alpine provides no advantage for Pandoc
+**Build command:**
+```bash
+docker build -f Dockerfile.pandoc-official -t md-pdf-mcp:pandoc-official .
+```
 
-**Pandoc Alternative (Already Available):**
-- Pandoc support is already implemented in `converter.py`
-- Automatically uses Pandoc if available (priority over LibreOffice)
-- Cross-platform benefit: Works same on Windows/macOS/Linux
-- **For local development**: Install Pandoc separately if desired
-- **For Docker**: Stick with LibreOffice (smaller and more reliable)
+---
+
+**Alternative: Debian + LibreOffice (Dockerfile)** for EXISTING deployments:
+
+Keep using this if you're already deployed and it works well.
+
+**Advantages:**
+1. **Proven stability**: LibreOffice headless mode since 2003
+2. **Good size**: 1.14 GB (only 11% larger than Pandoc)
+3. **Wide compatibility**: Handles complex Word documents
+4. **Familiar**: Most DevOps teams know LibreOffice
+
+**Build command:**
+```bash
+docker build -t md-pdf-mcp .
+```
+
+---
+
+**Why NOT use other alternatives?**
+
+- ❌ **Our Pandoc builds** (Debian/Alpine): 31-38% larger due to inefficient TeXLive install
+- ❌ **Alpine + LibreOffice**: 96% larger (2.02 GB) - Alpine doesn't help for LibreOffice
+- ❌ **libreofficedocker/libreoffice-unoserver**: 156% larger (2.64 GB) - includes unnecessary REST API
 
 ---
 
 ## Build Commands
 
 ```bash
-# Recommended: Debian + LibreOffice (1.14 GB)
+# RECOMMENDED: Official Pandoc (1.03 GB - SMALLEST!)
+docker build -f Dockerfile.pandoc-official -t md-pdf-mcp:pandoc-official .
+
+# Alternative: Debian + LibreOffice (1.14 GB)
 docker build -t md-pdf-mcp .
 
-# Test alternatives (not recommended due to size):
+# NOT RECOMMENDED: Our inefficient builds
 
-# Alpine + LibreOffice (2.02 GB - LARGEST)
-docker build -f Dockerfile.alpine -t md-pdf-mcp:alpine .
-
-# Pandoc + Debian (1.35 GB)
+# Pandoc + Debian (1.35 GB - our build, inefficient TeXLive)
 docker build -f Dockerfile.pandoc -t md-pdf-mcp:pandoc .
 
-# Pandoc + Alpine (1.42 GB)
+# Pandoc + Alpine (1.42 GB - our build, still inefficient)
 docker build -f Dockerfile.pandoc-alpine -t md-pdf-mcp:pandoc-alpine .
 
-# Compare sizes (sorted by size)
-docker images md-pdf-mcp --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}" | sort -k3 -h
+# Alpine + LibreOffice (2.02 GB - LARGE!)
+docker build -f Dockerfile.alpine -t md-pdf-mcp:alpine .
+
+# Compare all sizes (sorted by size)
+docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}" | grep -E "(pandoc|libreoffice|md-pdf-mcp)" | sort -k3 -h
 ```
 
 **Output:**
 ```
-REPOSITORY   TAG             SIZE
-md-pdf-mcp   latest          1.14GB  ✅ WINNER
-md-pdf-mcp   pandoc          1.35GB
-md-pdf-mcp   pandoc-alpine   1.42GB
-md-pdf-mcp   alpine          2.02GB  ❌ LARGEST
+REPOSITORY                                TAG             SIZE
+pandoc/core                               latest          319MB   (base image, no Python)
+pandoc/latex                              latest          782MB   (base image, no Python)
+md-pdf-mcp                                pandoc-official 1.03GB  ✅ WINNER (smallest full-featured)
+md-pdf-mcp                                latest          1.14GB  ✅ Good alternative
+md-pdf-mcp                                pandoc          1.35GB  ❌ Inefficient (our build)
+md-pdf-mcp                                pandoc-alpine   1.42GB  ❌ Inefficient (our build)
+md-pdf-mcp                                alpine          2.02GB  ❌ Large
+libreofficedocker/libreoffice-unoserver   edge            2.64GB  ❌ Largest
 ```
 
 ---
