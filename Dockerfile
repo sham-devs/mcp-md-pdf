@@ -1,12 +1,14 @@
 # Dockerfile for md-pdf-mcp
-# Provides DOCX conversion (PDF requires Windows + MS Word, not available in Linux containers)
+# Provides DOCX and PDF conversion (using LibreOffice for PDF)
 
 FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies
+# Install system dependencies including LibreOffice for PDF conversion
 RUN apt-get update && apt-get install -y \
+    libreoffice \
+    libreoffice-writer \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
@@ -28,5 +30,7 @@ CMD ["python", "-m", "md_pdf_mcp.server"]
 # Run instructions:
 # docker run -i md-pdf-mcp
 #
-# Note: PDF conversion is not available in Docker (requires Windows + Microsoft Word)
-# This container supports Markdown to DOCX conversion only.
+# Features:
+# - Markdown to DOCX conversion (python-docx)
+# - DOCX to PDF conversion (LibreOffice headless mode)
+# - Full cross-platform support

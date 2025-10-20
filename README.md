@@ -64,7 +64,7 @@ docker run -i md-pdf-mcp
 docker-compose up -d
 ```
 
-**Note:** Docker container supports **DOCX conversion only**. PDF conversion requires Windows + Microsoft Word, which is not available in Linux containers.
+**Note:** Docker container supports **both DOCX and PDF conversion**. PDF conversion uses LibreOffice in headless mode.
 
 ---
 
@@ -240,21 +240,32 @@ If no template is provided, a clean default design is used.
 ## **Platform Notes**
 
 * **DOCX Conversion:** Works on all platforms (Windows, macOS, Linux)
-* **PDF Conversion:** Requires Microsoft Word on Windows (via COM automation)
+* **PDF Conversion:** Cross-platform support with automatic detection
+  - **Windows:** Uses Microsoft Word via COM automation (requires MS Word installed)
+  - **macOS/Linux:** Uses LibreOffice in headless mode (requires LibreOffice installed)
+  - **Docker:** Includes LibreOffice for PDF conversion
 
-**For Mac/Linux:**
+**Installation Requirements:**
 
-1. Convert to DOCX using this tool
-2. Use LibreOffice:
+**Windows:**
+```bash
+pip install pywin32  # For MS Word integration
+```
 
-   ```bash
-   libreoffice --headless --convert-to pdf file.docx
-   ```
-3. Or Pandoc:
+**macOS:**
+```bash
+brew install --cask libreoffice
+```
 
-   ```bash
-   pandoc file.docx -o file.pdf
-   ```
+**Ubuntu/Debian:**
+```bash
+sudo apt-get install libreoffice libreoffice-writer
+```
+
+**Fedora:**
+```bash
+sudo dnf install libreoffice
+```
 
 ---
 
@@ -369,13 +380,29 @@ Update the configuration file with the correct path.
 
 ### PDF Conversion Fails
 
-**Error:** `PDF conversion failed: pywin32 library required`
+**Error:** `pywin32 library required for PDF conversion on Windows`
 
-**Fix:**
-* **Windows:** `pip install pywin32`
-* **macOS/Linux:** Convert to DOCX first, then use:
-  - LibreOffice: `libreoffice --headless --convert-to pdf file.docx`
-  - Pandoc: `pandoc file.docx -o file.pdf`
+**Fix (Windows):**
+```bash
+pip install pywin32
+```
+
+**Error:** `LibreOffice not found`
+
+**Fix (macOS):**
+```bash
+brew install --cask libreoffice
+```
+
+**Fix (Ubuntu/Debian):**
+```bash
+sudo apt-get install libreoffice libreoffice-writer
+```
+
+**Fix (Fedora):**
+```bash
+sudo dnf install libreoffice
+```
 
 ### Template Not Loading
 

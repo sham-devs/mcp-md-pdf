@@ -91,7 +91,7 @@ docker-compose logs      # View logs
 docker run --rm md-pdf-mcp pytest -m "not slow"
 ```
 
-**Note:** Docker supports DOCX conversion only (PDF requires Windows + MS Word).
+**Note:** Docker supports both DOCX and PDF conversion (includes LibreOffice for cross-platform PDF support).
 
 ## Architecture Details
 
@@ -104,7 +104,9 @@ docker run --rm md-pdf-mcp pytest -m "not slow"
 
 2. **Converter Layer** (`converter.py`):
    - `markdown_to_word()`: Markdown → .docx using python-docx
-   - `word_to_pdf()`: .docx → .pdf using pywin32 COM (Windows only)
+   - `word_to_pdf()`: .docx → .pdf (cross-platform: MS Word on Windows, LibreOffice on Linux/macOS)
+   - `_word_to_pdf_windows()`: MS Word COM automation implementation
+   - `_word_to_pdf_libreoffice()`: LibreOffice headless mode implementation
    - Template support via `_load_template()`
 
 ### Markdown Processing Pipeline
@@ -178,11 +180,14 @@ Templates (`.dotx` files) provide:
 - **DO NOT create markdown files in project root** - Use `docs/` for documentation
 - Test output files (`.docx`, `.pdf`) are gitignored
 
-### Platform Limitations
+### Platform Requirements
 
-- **PDF conversion**: Windows-only (requires Microsoft Word via COM)
-  - macOS/Linux: Convert to .docx first, then use LibreOffice/Pandoc
 - **DOCX conversion**: Cross-platform (python-docx works everywhere)
+- **PDF conversion**: Cross-platform with platform-specific backends
+  - **Windows**: Requires Microsoft Word (uses COM automation via pywin32)
+  - **macOS**: Requires LibreOffice (`brew install --cask libreoffice`)
+  - **Linux**: Requires LibreOffice (included in Docker image)
+  - **Docker**: LibreOffice pre-installed for PDF support
 
 ### Testing Considerations
 

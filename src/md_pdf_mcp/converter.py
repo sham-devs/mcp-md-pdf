@@ -112,7 +112,11 @@ class MarkdownConverter:
 
     def word_to_pdf(self, docx_path: str, pdf_path: str) -> bool:
         """
-        Convert Word document to PDF (Windows only - requires MS Word).
+        Convert Word document to PDF.
+
+        Platform-specific implementations:
+        - Windows: Uses Microsoft Word via COM automation
+        - Linux/macOS: Uses LibreOffice in headless mode
 
         Args:
             docx_path: Path to input .docx file
@@ -121,12 +125,24 @@ class MarkdownConverter:
         Returns:
             True if successful, False otherwise
         """
+        import platform
+        import subprocess
+
+        # Convert to absolute paths
+        docx_path = os.path.abspath(docx_path)
+        pdf_path = os.path.abspath(pdf_path)
+
+        if platform.system() == "Windows":
+            # Windows: Use Microsoft Word COM automation
+            return self._word_to_pdf_windows(docx_path, pdf_path)
+        else:
+            # Linux/macOS: Use LibreOffice headless mode
+            return self._word_to_pdf_libreoffice(docx_path, pdf_path)
+
+    def _word_to_pdf_windows(self, docx_path: str, pdf_path: str) -> bool:
+        """Convert Word to PDF using Microsoft Word COM automation (Windows only)"""
         try:
             import win32com.client
-
-            # Convert to absolute paths
-            docx_path = os.path.abspath(docx_path)
-            pdf_path = os.path.abspath(pdf_path)
 
             # Create Word application
             word = win32com.client.Dispatch("Word.Application")
@@ -151,9 +167,66 @@ class MarkdownConverter:
                 word.Quit()
 
         except ImportError:
-            raise Exception("pywin32 library required for PDF conversion (Windows only)")
+            raise Exception("pywin32 library required for PDF conversion on Windows. Install: pip install pywin32")
         except Exception as e:
-            raise Exception(f"Failed to convert Word to PDF: {e}")
+            raise Exception(f"Failed to convert Word to PDF using Microsoft Word: {e}")
+
+    def _word_to_pdf_libreoffice(self, docx_path: str, pdf_path: str) -> bool:
+        """Convert Word to PDF using LibreOffice (Linux/macOS)"""
+        import subprocess
+        import shutil
+
+        # Check if LibreOffice is installed
+        libreoffice_cmd = shutil.which('libreoffice') or shutil.which('soffice')
+
+        if not libreoffice_cmd:
+            raise Exception(
+                "LibreOffice not found. Install LibreOffice for PDF conversion:\n"
+                "  - Ubuntu/Debian: sudo apt-get install libreoffice\n"
+                "  - macOS: brew install --cask libreoffice\n"
+                "  - Fedora: sudo dnf install libreoffice"
+            )
+
+        try:
+            # Get output directory
+            output_dir = os.path.dirname(pdf_path)
+            if not output_dir:
+                output_dir = "."
+
+            # Run LibreOffice headless conversion
+            result = subprocess.run(
+                [
+                    libreoffice_cmd,
+                    '--headless',
+                    '--convert-to', 'pdf',
+                    '--outdir', output_dir,
+                    docx_path
+                ],
+                capture_output=True,
+                text=True,
+                timeout=60  # 60 second timeout
+            )
+
+            # Check if conversion succeeded
+            if result.returncode != 0:
+                raise Exception(f"LibreOffice conversion failed: {result.stderr}")
+
+            # LibreOffice creates PDF with same basename as input
+            expected_pdf = os.path.join(output_dir, os.path.basename(docx_path).replace('.docx', '.pdf'))
+
+            # If output filename is different, rename it
+            if expected_pdf != pdf_path and os.path.exists(expected_pdf):
+                os.rename(expected_pdf, pdf_path)
+
+            if not os.path.exists(pdf_path):
+                raise Exception("PDF file was not created by LibreOffice")
+
+            return True
+
+        except subprocess.TimeoutExpired:
+            raise Exception("LibreOffice conversion timed out (>60 seconds)")
+        except Exception as e:
+            raise Exception(f"Failed to convert Word to PDF using LibreOffice: {e}")
 
     def _load_template(self, template_path: str) -> Document:
         """Load .dotx template file"""
