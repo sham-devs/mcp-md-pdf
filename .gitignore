@@ -1,0 +1,52 @@
+# Python build artifacts
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Development environment
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+*.cover
+
+# Output files (from testing)
+*.docx
+*.pdf
+test_*.py  # Exclude root-level test files (tests should be in tests/ folder)
+debug_*.py
+example*.docx
+example*.md
+bullet_detection_results.txt
+USER-DATA-REQUIREMENTS.docx
+USER-DATA-REQUIREMENTS.pdf
+test_lists.md
+test_lists_output.docx
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Distribution
+*.whl
+/.claude
