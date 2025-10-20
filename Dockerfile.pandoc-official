@@ -24,6 +24,9 @@ COPY src/ src/
 # Use --break-system-packages since this is a container (safe)
 RUN pip3 install --no-cache-dir --break-system-packages -e .
 
+# Reset ENTRYPOINT from base image (pandoc/latex sets it to pandoc)
+ENTRYPOINT []
+
 # Expose MCP server on stdio
 CMD ["python3", "-m", "md_pdf_mcp.server"]
 
