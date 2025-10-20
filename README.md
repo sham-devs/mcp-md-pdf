@@ -31,40 +31,106 @@ That’s where this small project came from — a quick way to turn Markdown int
 
 ## **Installation**
 
-### Option 1: Using `uvx` (Recommended)
+Choose the installation method that best fits your needs:
 
+| Method | Code Download? | PDF Support | Best For |
+|--------|---------------|-------------|----------|
+| **uvx** (Option 1) | ❌ No | ✅ Yes (LibreOffice required) | Claude Desktop users |
+| **pip** (Option 2) | ❌ No | ✅ Yes (LibreOffice required) | Python package users |
+| **From Source** (Option 3) | ✅ Yes | ✅ Yes (LibreOffice required) | Developers |
+| **Docker** (Option 4) | ✅ Yes | ✅ Yes (included!) | Complete isolation |
+
+### Option 1: Using `uvx` (Recommended - No Code Download Needed)
+
+**Best for:** Claude Desktop users who want the simplest installation.
+
+**Requirements:**
+- Python 3.10+
+- For PDF conversion:
+  - **Windows:** Microsoft Word (uses COM automation)
+  - **macOS:** LibreOffice (`brew install --cask libreoffice`)
+  - **Linux:** LibreOffice (`sudo apt-get install libreoffice`)
+
+**Installation:**
 ```bash
-# Install and run with uvx
+# No code download needed - uvx handles everything
 uvx md-pdf-mcp
 ```
 
-### Option 2: From Source
+---
 
+### Option 2: Using `pip` (No Code Download Needed)
+
+**Best for:** Users who want to install as a Python package.
+
+**Requirements:**
+- Python 3.10+
+- For PDF conversion (same as Option 1):
+  - **Windows:** Microsoft Word
+  - **macOS/Linux:** LibreOffice
+
+**Installation:**
 ```bash
-# Clone or navigate to the repository
-cd md-pdf-mcp
-
-# Install in development mode
-pip install -e .
-
-# Or install from PyPI (when published)
+# Install from PyPI (when published)
 pip install md-pdf-mcp
+
+# Or install with development dependencies
+pip install "md-pdf-mcp[dev]"
 ```
 
-### Option 3: Using Docker
+---
 
+### Option 3: From Source (Code Download Required)
+
+**Best for:** Developers who want to modify the code or contribute.
+
+**Requirements:**
+- Git
+- Python 3.10+
+- For PDF conversion (same as above)
+
+**Installation:**
 ```bash
-# Build the Docker image
+# Step 1: Clone the repository
+git clone https://github.com/yourusername/md-pdf-mcp.git
+cd md-pdf-mcp
+
+# Step 2: Install in development mode
+pip install -e .
+
+# Step 3: (Optional) Install dev dependencies
+pip install -e ".[dev]"
+```
+
+---
+
+### Option 4: Using Docker (Code Download Required for Build)
+
+**Best for:** Users who want everything pre-packaged (Python + LibreOffice + code).
+
+**Requirements:**
+- Docker Desktop
+- Git (to clone the repository)
+
+**What's Included:** Docker container includes Python, LibreOffice, and all dependencies. **No additional software needed!**
+
+**Installation:**
+```bash
+# Step 1: Clone the repository
+git clone https://github.com/yourusername/md-pdf-mcp.git
+cd md-pdf-mcp
+
+# Step 2: Build the Docker image
 docker build -t md-pdf-mcp .
 
-# Run with Docker
+# Step 3: Run the container
 docker run -i md-pdf-mcp
 
 # Or use docker-compose
 docker-compose up -d
 ```
 
-**Note:** Docker container supports **both DOCX and PDF conversion**. PDF conversion uses LibreOffice in headless mode.
+**Note:** Docker supports **both DOCX and PDF conversion** out of the box (LibreOffice 25.2+ included).
 
 ---
 
@@ -237,28 +303,62 @@ If no template is provided, a clean default design is used.
 
 ---
 
-## **Platform Notes**
+## **PDF Conversion Setup**
 
-* **DOCX Conversion:** Works on all platforms (Windows, macOS, Linux)
-* **PDF Conversion:** Cross-platform support with automatic detection
-  - **Windows:** Uses Microsoft Word via COM automation (requires MS Word installed)
-  - **macOS/Linux:** Uses LibreOffice in headless mode (requires LibreOffice installed)
-  - **Docker:** Includes LibreOffice for PDF conversion
+**Important:** PDF conversion requires additional software depending on your platform.
 
-**Installation Requirements:**
+### DOCX Conversion (All Platforms)
+✅ Works out of the box - no additional software needed!
 
-**Windows:**
+### PDF Conversion (Platform-Specific)
+
+#### Windows Users
+
+**Option A: Microsoft Word (Recommended for Windows)**
+
+If you have Microsoft Word installed:
 ```bash
-pip install pywin32  # For MS Word integration
+# Install Python COM automation library
+pip install pywin32
 ```
 
-**macOS:**
+That's it! The converter will automatically use Word for high-quality PDF conversion.
+
+**Option B: LibreOffice (Alternative)**
 ```bash
+# Download and install LibreOffice
+# Visit: https://www.libreoffice.org/download/download/
+
+# Or use Chocolatey
+choco install libreoffice
+```
+
+---
+
+#### macOS Users
+
+LibreOffice is required for PDF conversion on macOS:
+
+```bash
+# Using Homebrew (recommended)
 brew install --cask libreoffice
+
+# Or download from: https://www.libreoffice.org/download/download/
 ```
+
+**Verify installation:**
+```bash
+which libreoffice
+# Should output: /usr/local/bin/libreoffice
+```
+
+---
+
+#### Linux Users
 
 **Ubuntu/Debian:**
 ```bash
+sudo apt-get update
 sudo apt-get install libreoffice libreoffice-writer
 ```
 
@@ -266,6 +366,33 @@ sudo apt-get install libreoffice libreoffice-writer
 ```bash
 sudo dnf install libreoffice
 ```
+
+**Arch Linux:**
+```bash
+sudo pacman -S libreoffice-fresh
+```
+
+**Verify installation:**
+```bash
+libreoffice --version
+# Should output: LibreOffice 7.x or higher
+```
+
+---
+
+#### Docker Users
+
+✅ **No setup needed!** LibreOffice 25.2+ is pre-installed in the Docker image.
+
+---
+
+## **Platform Notes**
+
+* **DOCX Conversion:** Works on all platforms (Windows, macOS, Linux) - **no additional software required**
+* **PDF Conversion:** Cross-platform with automatic platform detection:
+  - **Windows:** Uses Microsoft Word (if installed) or LibreOffice
+  - **macOS/Linux:** Uses LibreOffice in headless mode
+  - **Docker:** LibreOffice 25.2+ included
 
 ---
 
