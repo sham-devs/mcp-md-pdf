@@ -134,35 +134,17 @@ class MarkdownConverter:
         docx_path = os.path.abspath(docx_path)
         pdf_path = os.path.abspath(pdf_path)
 
-        # Check if Pandoc is available (best option if present)
-        pandoc_error = None
+        # Check if Pandoc is available (priority method)
         if shutil.which('pandoc'):
-            try:
-                return self._word_to_pdf_pandoc(docx_path, pdf_path)
-            except Exception as e:
-                # Store Pandoc error for later reporting
-                pandoc_error = str(e)
-                # Fall back to platform-specific methods if Pandoc fails
-                pass
+            return self._word_to_pdf_pandoc(docx_path, pdf_path)
 
+        # Fallback to platform-specific methods if Pandoc not available
         if platform.system() == "Windows":
             # Windows: Use Microsoft Word COM automation
-            try:
-                return self._word_to_pdf_windows(docx_path, pdf_path)
-            except Exception as e:
-                # If Pandoc also failed, report both errors
-                if pandoc_error:
-                    raise Exception(f"PDF conversion failed.\n\nPandoc error: {pandoc_error}\n\nWindows Word error: {e}")
-                raise
+            return self._word_to_pdf_windows(docx_path, pdf_path)
         else:
             # Linux/macOS: Use LibreOffice headless mode
-            try:
-                return self._word_to_pdf_libreoffice(docx_path, pdf_path)
-            except Exception as e:
-                # If Pandoc also failed, report both errors
-                if pandoc_error:
-                    raise Exception(f"PDF conversion failed.\n\nPandoc error: {pandoc_error}\n\nLibreOffice error: {e}")
-                raise
+            return self._word_to_pdf_libreoffice(docx_path, pdf_path)
 
     def _word_to_pdf_windows(self, docx_path: str, pdf_path: str) -> bool:
         """Convert Word to PDF using Microsoft Word COM automation (Windows only)"""
@@ -259,13 +241,13 @@ class MarkdownConverter:
 
         try:
             # Run Pandoc conversion
-            # Pandoc directly converts DOCX to PDF using LaTeX engine
+            # Use XeLaTeX for full Unicode/emoji support
             result = subprocess.run(
                 [
                     'pandoc',
                     docx_path,
                     '-o', pdf_path,
-                    '--pdf-engine=pdflatex'  # Use pdflatex for better formatting
+                    '--pdf-engine=xelatex'  # XeLaTeX has native Unicode support
                 ],
                 capture_output=True,
                 text=True,
