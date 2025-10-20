@@ -114,9 +114,10 @@ class MarkdownConverter:
         """
         Convert Word document to PDF.
 
-        Platform-specific implementations:
-        - Windows: Uses Microsoft Word via COM automation
-        - Linux/macOS: Uses LibreOffice in headless mode
+        Platform-specific implementations (priority order):
+        1. Pandoc (if available) - lightweight and cross-platform
+        2. Windows: Microsoft Word via COM automation
+        3. Linux/macOS: LibreOffice in headless mode
 
         Args:
             docx_path: Path to input .docx file
@@ -127,10 +128,19 @@ class MarkdownConverter:
         """
         import platform
         import subprocess
+        import shutil
 
         # Convert to absolute paths
         docx_path = os.path.abspath(docx_path)
         pdf_path = os.path.abspath(pdf_path)
+
+        # Check if Pandoc is available (best option if present)
+        if shutil.which('pandoc'):
+            try:
+                return self._word_to_pdf_pandoc(docx_path, pdf_path)
+            except Exception:
+                # Fall back to platform-specific methods if Pandoc fails
+                pass
 
         if platform.system() == "Windows":
             # Windows: Use Microsoft Word COM automation
@@ -227,6 +237,47 @@ class MarkdownConverter:
             raise Exception("LibreOffice conversion timed out (>60 seconds)")
         except Exception as e:
             raise Exception(f"Failed to convert Word to PDF using LibreOffice: {e}")
+
+    def _word_to_pdf_pandoc(self, docx_path: str, pdf_path: str) -> bool:
+        """Convert Word to PDF using Pandoc (cross-platform, lightweight)"""
+        import subprocess
+
+        try:
+            # Run Pandoc conversion
+            # Pandoc directly converts DOCX to PDF using LaTeX engine
+            result = subprocess.run(
+                [
+                    'pandoc',
+                    docx_path,
+                    '-o', pdf_path,
+                    '--pdf-engine=pdflatex'  # Use pdflatex for better formatting
+                ],
+                capture_output=True,
+                text=True,
+                timeout=60  # 60 second timeout
+            )
+
+            # Check if conversion succeeded
+            if result.returncode != 0:
+                raise Exception(f"Pandoc conversion failed: {result.stderr}")
+
+            if not os.path.exists(pdf_path):
+                raise Exception("PDF file was not created by Pandoc")
+
+            return True
+
+        except subprocess.TimeoutExpired:
+            raise Exception("Pandoc conversion timed out (>60 seconds)")
+        except FileNotFoundError:
+            raise Exception(
+                "Pandoc not found. Install Pandoc for PDF conversion:\n"
+                "  - Ubuntu/Debian: sudo apt-get install pandoc texlive-latex-base\n"
+                "  - macOS: brew install pandoc basictex\n"
+                "  - Windows: choco install pandoc miktex\n"
+                "  - Or download from: https://pandoc.org/installing.html"
+            )
+        except Exception as e:
+            raise Exception(f"Failed to convert Word to PDF using Pandoc: {e}")
 
     def _load_template(self, template_path: str) -> Document:
         """Load .dotx template file"""

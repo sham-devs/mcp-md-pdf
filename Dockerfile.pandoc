@@ -1,0 +1,41 @@
+# Dockerfile.pandoc - Minimal Pandoc-based image for md-pdf-mcp
+# SMALLEST option: ~150-200 MB vs 1.14 GB Debian!
+#
+# Key insight: .dotx templates are handled by python-docx (pure Python)
+# We only need Pandoc for DOCX → PDF conversion (Step 2)
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install Pandoc for DOCX → PDF conversion
+# Much smaller than LibreOffice!
+RUN apt-get update && apt-get install -y \
+    pandoc \
+    texlive-latex-base \
+    texlive-fonts-recommended \
+    texlive-latex-extra \
+    --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy project files
+COPY pyproject.toml .
+COPY README.md .
+COPY src/ src/
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -e .
+
+# Expose MCP server on stdio
+CMD ["python", "-m", "md_pdf_mcp.server"]
+
+# Build instructions:
+# docker build -f Dockerfile.pandoc -t md-pdf-mcp:pandoc .
+#
+# Expected size: ~200-300 MB (includes LaTeX for PDF rendering)
+#
+# Features:
+# - Markdown to DOCX conversion (python-docx)
+# - .dotx template support (python-docx)
+# - DOCX to PDF conversion (Pandoc)
+# - Much smaller than LibreOffice-based images
