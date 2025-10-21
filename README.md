@@ -305,7 +305,20 @@ If no template is provided, a clean default design is used.
 
 ## **PDF Conversion Setup**
 
-**Important:** PDF conversion requires additional software depending on your platform.
+**Important:** PDF conversion requires LibreOffice (or Microsoft Word on Windows) to preserve all DOCX formatting.
+
+### Why LibreOffice?
+
+LibreOffice is **required** for PDF conversion because it preserves ALL formatting from DOCX files:
+- ✅ **Colors, backgrounds, borders** - Professional styling intact
+- ✅ **Code blocks** - Syntax highlighting and backgrounds preserved
+- ✅ **Tables** - Headers, borders, and cell styling maintained
+- ✅ **Template styles** - `.dotx` template formatting carried through to PDF
+- ✅ **Fonts & spacing** - Typography remains pixel-perfect
+
+**Alternative approaches (Pandoc, etc.) lose formatting** - they treat DOCX as plain text markup, stripping visual styles during PDF conversion.
+
+---
 
 ### DOCX Conversion (All Platforms)
 ✅ Works out of the box - no additional software needed!
@@ -314,7 +327,7 @@ If no template is provided, a clean default design is used.
 
 #### Windows Users
 
-**Option A: Microsoft Word (Recommended for Windows)**
+**Option A: Microsoft Word (Best for Windows)**
 
 If you have Microsoft Word installed:
 ```bash
@@ -322,49 +335,86 @@ If you have Microsoft Word installed:
 pip install pywin32
 ```
 
-That's it! The converter will automatically use Word for high-quality PDF conversion.
+That's it! The converter will automatically use Word for PDF conversion.
 
-**Option B: LibreOffice (Alternative)**
+**Option B: LibreOffice (Recommended if no Word)**
 ```bash
-# Download and install LibreOffice
-# Visit: https://www.libreoffice.org/download/download/
+# Method 1: Direct download (easiest)
+# Visit: https://www.libreoffice.org/download/
 
-# Or use Chocolatey
+# Method 2: Using Chocolatey package manager
 choco install libreoffice
+
+# Method 3: Using winget (Windows Package Manager)
+winget install TheDocumentFoundation.LibreOffice
+```
+
+**Verify installation:**
+```powershell
+# Check if LibreOffice is installed
+where.exe soffice
+# Should output: C:\Program Files\LibreOffice\program\soffice.exe
 ```
 
 ---
 
 #### macOS Users
 
-LibreOffice is required for PDF conversion on macOS:
+**LibreOffice is REQUIRED for PDF conversion on macOS** (no native MS Word COM support).
+
+**Installation (Choose one method):**
 
 ```bash
-# Using Homebrew (recommended)
+# Method 1: Homebrew (RECOMMENDED - easiest updates)
 brew install --cask libreoffice
 
-# Or download from: https://www.libreoffice.org/download/download/
+# Method 2: Direct download
+# Visit: https://www.libreoffice.org/download/
+# Download LibreOffice_25.x.x_MacOS_aarch64.dmg (M1/M2/M3)
+# Or LibreOffice_25.x.x_MacOS_x86-64.dmg (Intel Macs)
 ```
+
+**System Requirements:**
+- macOS 10.15 (Catalina) or newer
+- ~800 MB disk space
+- Works on both Intel and Apple Silicon (M1/M2/M3)
 
 **Verify installation:**
 ```bash
-which libreoffice
-# Should output: /usr/local/bin/libreoffice
+which soffice
+# Should output: /Applications/LibreOffice.app/Contents/MacOS/soffice
+
+libreoffice --version
+# Should output: LibreOffice 25.x.x or higher
 ```
 
 ---
 
 #### Linux Users
 
-**Ubuntu/Debian:**
+**Ubuntu/Debian (Recommended method):**
 ```bash
+# Update package list
 sudo apt-get update
-sudo apt-get install libreoffice libreoffice-writer
+
+# Install LibreOffice (headless mode supported)
+sudo apt-get install -y libreoffice libreoffice-writer
+
+# Optional: Install additional fonts for better compatibility
+sudo apt-get install -y fonts-liberation fonts-dejavu
 ```
 
-**Fedora:**
+**For headless servers (Docker, CI/CD):**
 ```bash
-sudo dnf install libreoffice
+# Minimal installation without GUI components
+sudo apt-get install -y libreoffice-writer libreoffice-calc \
+  libxinerama1 libfontconfig1 libdbus-glib-1-2 libcairo2 \
+  libcups2 libglu1-mesa libsm6
+```
+
+**Fedora/RHEL:**
+```bash
+sudo dnf install libreoffice libreoffice-writer
 ```
 
 **Arch Linux:**
@@ -375,7 +425,11 @@ sudo pacman -S libreoffice-fresh
 **Verify installation:**
 ```bash
 libreoffice --version
-# Should output: LibreOffice 7.x or higher
+# Should output: LibreOffice 7.x or 25.x
+
+# Test headless mode
+soffice --headless --version
+# Should output version without GUI
 ```
 
 ---
