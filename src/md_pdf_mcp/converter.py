@@ -134,17 +134,42 @@ class MarkdownConverter:
         docx_path = os.path.abspath(docx_path)
         pdf_path = os.path.abspath(pdf_path)
 
-        # Check if Pandoc is available (priority method)
-        if shutil.which('pandoc'):
-            return self._word_to_pdf_pandoc(docx_path, pdf_path)
+        # DOCX→PDF conversion strategy: Use LibreOffice ONLY
+        # LibreOffice preserves ALL DOCX formatting (colors, backgrounds, borders, tables)
+        # Pandoc is NOT used for DOCX→PDF as it loses visual styling
 
-        # Fallback to platform-specific methods if Pandoc not available
         if platform.system() == "Windows":
-            # Windows: Use Microsoft Word COM automation
-            return self._word_to_pdf_windows(docx_path, pdf_path)
+            # Windows: Try Microsoft Word COM first (best formatting)
+            if shutil.which('WINWORD.EXE') or self._is_word_installed():
+                return self._word_to_pdf_windows(docx_path, pdf_path)
+
+            # Fall back to LibreOffice if Word unavailable
+            if shutil.which('soffice') or shutil.which('libreoffice'):
+                return self._word_to_pdf_libreoffice(docx_path, pdf_path)
         else:
-            # Linux/macOS: Use LibreOffice headless mode
-            return self._word_to_pdf_libreoffice(docx_path, pdf_path)
+            # Linux/macOS/Docker: Use LibreOffice (preserves formatting perfectly)
+            if shutil.which('soffice') or shutil.which('libreoffice'):
+                return self._word_to_pdf_libreoffice(docx_path, pdf_path)
+
+        # No suitable conversion tool available
+        raise Exception(
+            "LibreOffice required for DOCX→PDF conversion with formatting preservation.\n"
+            "Install LibreOffice:\n"
+            "  - Ubuntu/Debian: sudo apt-get install libreoffice\n"
+            "  - macOS: brew install --cask libreoffice\n"
+            "  - Windows: Download from https://www.libreoffice.org/download/\n"
+            "  - Docker: Use the provided Dockerfile (includes LibreOffice)"
+        )
+
+    def _is_word_installed(self) -> bool:
+        """Check if Microsoft Word is installed on Windows"""
+        try:
+            import win32com.client
+            word = win32com.client.Dispatch("Word.Application")
+            word.Quit()
+            return True
+        except Exception:
+            return False
 
     def _word_to_pdf_windows(self, docx_path: str, pdf_path: str) -> bool:
         """Convert Word to PDF using Microsoft Word COM automation (Windows only)"""

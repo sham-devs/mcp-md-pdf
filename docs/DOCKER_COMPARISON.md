@@ -152,49 +152,62 @@ We built and tested **SEVEN** options including official Docker images:
 
 ## Recommendation
 
-**🏆 Use Official Pandoc Image (Dockerfile.pandoc-official)** for NEW deployments:
+**🏆 FINAL DECISION: Use Debian + LibreOffice (Dockerfile) for ALL deployments**
 
-```dockerfile
-FROM pandoc/latex:latest
-# ... install Python and dependencies
-```
+After extensive testing and web research, we discovered a **CRITICAL ISSUE** with Pandoc DOCX→PDF conversion:
 
-**Advantages:**
-1. **Smallest image**: 1.03 GB (10% smaller than Debian!)
-2. **Official Pandoc**: Maintained by Pandoc team, always up-to-date
-3. **Optimized TeXLive**: Minimal LaTeX packages, expertly selected
-4. **Cross-platform**: Same Pandoc behavior on all systems
-5. **Well-maintained**: Updated regularly with security patches
+### The Formatting Problem
 
-**Build command:**
-```bash
-docker build -f Dockerfile.pandoc-official -t md-pdf-mcp:pandoc-official .
-```
+**Pandoc DOCX→PDF loses ALL Word formatting:**
+- ❌ Colors disappear
+- ❌ Background colors stripped
+- ❌ Borders removed
+- ❌ Table positioning changed
+- ❌ Professional styling lost
 
----
+**LibreOffice DOCX→PDF preserves EVERYTHING:**
+- ✅ Colors intact
+- ✅ Backgrounds preserved
+- ✅ Borders maintained
+- ✅ Table layout perfect
+- ✅ Professional appearance
 
-**Alternative: Debian + LibreOffice (Dockerfile)** for EXISTING deployments:
+### Evidence
 
-Keep using this if you're already deployed and it works well.
+Web research confirms this is a **known limitation** of Pandoc:
+- Stack Overflow: "How do you keep the styling when you convert docx to pdf in Pandoc?" - Answer: You can't.
+- GitHub Issues: Multiple reports of formatting loss in Pandoc DOCX→PDF conversion
+- Industry standard: LibreOffice headless mode for DOCX→PDF with formatting preservation
 
-**Advantages:**
-1. **Proven stability**: LibreOffice headless mode since 2003
-2. **Good size**: 1.14 GB (only 11% larger than Pandoc)
-3. **Wide compatibility**: Handles complex Word documents
-4. **Familiar**: Most DevOps teams know LibreOffice
+### Final Recommendation
 
-**Build command:**
+**Use Debian + LibreOffice (Dockerfile):**
+
 ```bash
 docker build -t md-pdf-mcp .
 ```
 
+**Why this is the ONLY option:**
+1. **Preserves ALL formatting**: Professional-looking PDFs (CRITICAL requirement)
+2. **Proven stability**: LibreOffice headless mode since 2003
+3. **Reasonable size**: 1.14 GB (industry standard for document conversion)
+4. **Template support**: Works with .dotx templates
+5. **Wide compatibility**: Handles complex Word documents
+
+**Size is secondary to functionality:**
+- Working PDFs (1.14 GB) > Broken PDFs (1.03 GB)
+- The 110 MB savings from Pandoc-only is NOT worth losing all formatting
+
 ---
 
-**Why NOT use other alternatives?**
+**Why NOT use Pandoc for DOCX→PDF?**
 
-- ❌ **Our Pandoc builds** (Debian/Alpine): 31-38% larger due to inefficient TeXLive install
+- ❌ **Pandoc-official** (1.03 GB): Smallest but **BREAKS PDF FORMATTING** (dealbreaker!)
+- ❌ **Our Pandoc builds** (Debian/Alpine): Same formatting issues + larger size
 - ❌ **Alpine + LibreOffice**: 96% larger (2.02 GB) - Alpine doesn't help for LibreOffice
 - ❌ **libreofficedocker/libreoffice-unoserver**: 156% larger (2.64 GB) - includes unnecessary REST API
+
+**Note:** Pandoc IS used for Markdown→PDF direct conversion (bypassing DOCX), where it excels with XeLaTeX. But for DOCX→PDF (needed for template support), LibreOffice is the ONLY viable option.
 
 ---
 

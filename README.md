@@ -394,6 +394,14 @@ libreoffice --version
   - **macOS/Linux:** Uses LibreOffice in headless mode
   - **Docker:** LibreOffice 25.2+ included
 
+**Why LibreOffice for PDF?** LibreOffice preserves **ALL** DOCX formatting when converting to PDF:
+- ✅ Colors, backgrounds, and borders
+- ✅ Professional code block styling (#F5F5F5 backgrounds)
+- ✅ Blockquote borders (blue left border)
+- ✅ Table headers with colored backgrounds
+- ✅ Template styles from .dotx files
+- ✅ Fonts, spacing, and layout
+
 ---
 
 ## **Requirements**

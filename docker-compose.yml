@@ -18,5 +18,5 @@ services:
 # docker-compose down     # Stop server
 # docker-compose logs     # View logs
 #
-# Note: This provides DOCX conversion only.
-# PDF conversion requires Windows + Microsoft Word (not available in containers)
+# Note: This image supports BOTH DOCX and PDF conversion!
+# PDF conversion uses LibreOffice headless mode (preserves all formatting)
