@@ -57,6 +57,24 @@ Choose the installation method that best fits your needs:
 uvx md-pdf-mcp
 ```
 
+**Claude Desktop Setup:**
+
+Add to your `claude_desktop_config.json`:
+```json
+{
+  "mcpServers": {
+    "md-pdf": {
+      "command": "uvx",
+      "args": ["md-pdf-mcp"]
+    }
+  }
+}
+```
+
+**Restart Claude Desktop** for changes to take effect.
+
+> 📖 See [Configuration section](#configuration) for config file location and alternative setups.
+
 ---
 
 ### Option 2: Using `pip` (No Code Download Needed)
@@ -77,6 +95,24 @@ pip install md-pdf-mcp
 # Or install with development dependencies
 pip install "md-pdf-mcp[dev]"
 ```
+
+**Claude Desktop Setup:**
+
+Add to your `claude_desktop_config.json`:
+```json
+{
+  "mcpServers": {
+    "md-pdf": {
+      "command": "python",
+      "args": ["-m", "md_pdf_mcp.server"]
+    }
+  }
+}
+```
+
+**Restart Claude Desktop** for changes to take effect.
+
+> 📖 See [Configuration section](#configuration) for config file location and alternative setups.
 
 ---
 
@@ -102,6 +138,24 @@ pip install -e .
 pip install -e ".[dev]"
 ```
 
+**Claude Desktop Setup:**
+
+Add to your `claude_desktop_config.json`:
+```json
+{
+  "mcpServers": {
+    "md-pdf": {
+      "command": "python",
+      "args": ["-m", "md_pdf_mcp.server"]
+    }
+  }
+}
+```
+
+**Restart Claude Desktop** for changes to take effect.
+
+> 📖 See [Configuration section](#configuration) for config file location and alternative setups.
+
 ---
 
 ### Option 4: Using Docker (Code Download Required for Build)
@@ -123,14 +177,32 @@ cd md-pdf-mcp
 # Step 2: Build the Docker image
 docker build -t md-pdf-mcp .
 
-# Step 3: Run the container
-docker run -i md-pdf-mcp
+# Step 3: Test the container (optional)
+docker run -i --rm md-pdf-mcp
 
 # Or use docker-compose
 docker-compose up -d
 ```
 
 **Note:** Docker supports **both DOCX and PDF conversion** out of the box (LibreOffice 25.2+ included).
+
+**Claude Desktop Setup:**
+
+Add to your `claude_desktop_config.json`:
+```json
+{
+  "mcpServers": {
+    "md-pdf": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "md-pdf-mcp"]
+    }
+  }
+}
+```
+
+**Restart Claude Desktop** for changes to take effect.
+
+> 📖 See [Configuration section](#configuration) for config file location and alternative setups.
 
 ---
 
@@ -190,6 +262,20 @@ Open the configuration file and add the md-pdf-mcp server:
   }
 }
 ```
+
+**Option D: Using Docker**
+```json
+{
+  "mcpServers": {
+    "md-pdf": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "md-pdf-mcp"]
+    }
+  }
+}
+```
+
+> **Note:** The `--rm` flag automatically removes the container after execution, preventing container accumulation.
 
 ### Step 3: Restart Claude Desktop
 

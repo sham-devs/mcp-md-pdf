@@ -1,10 +1,9 @@
-version: '3.8'
-
 services:
   md-pdf-mcp:
     build: .
     image: md-pdf-mcp:latest
     container_name: md-pdf-mcp-server
+    restart: unless-stopped
     stdin_open: true
     tty: true
     volumes:
@@ -14,9 +13,15 @@ services:
     command: python -m md_pdf_mcp.server
 
 # Usage:
-# docker-compose up -d    # Start server in background
-# docker-compose down     # Stop server
+# docker-compose up -d    # Start server in background (auto-restarts on reboot)
+# docker-compose down     # Stop server (disables auto-restart)
 # docker-compose logs     # View logs
+# docker-compose restart  # Restart server
+#
+# Auto-start on Windows boot:
+# 1. Ensure Docker Desktop is set to start on Windows login
+# 2. Run: docker-compose up -d
+# 3. Container will auto-restart whenever Docker Desktop starts
 #
 # Note: This image supports BOTH DOCX and PDF conversion!
 # PDF conversion uses LibreOffice headless mode (preserves all formatting)
