@@ -73,26 +73,6 @@ python -m md_pdf_mcp.server
 npx @modelcontextprotocol/inspector python -m md_pdf_mcp.server
 ```
 
-### Docker
-
-```bash
-# Build Docker image
-docker build -t md-pdf-mcp .
-
-# Run container interactively
-docker run -i md-pdf-mcp
-
-# Use docker-compose
-docker-compose up -d     # Start in background
-docker-compose down      # Stop
-docker-compose logs      # View logs
-
-# Run tests in Docker
-docker run --rm md-pdf-mcp pytest -m "not slow"
-```
-
-**Note:** Docker supports both DOCX and PDF conversion (includes LibreOffice for cross-platform PDF support).
-
 ## Architecture Details
 
 ### Two-Layer Conversion System
@@ -186,8 +166,7 @@ Templates (`.dotx` files) provide:
 - **PDF conversion**: Cross-platform with platform-specific backends
   - **Windows**: Requires Microsoft Word (uses COM automation via pywin32)
   - **macOS**: Requires LibreOffice (`brew install --cask libreoffice`)
-  - **Linux**: Requires LibreOffice (included in Docker image)
-  - **Docker**: LibreOffice pre-installed for PDF support
+  - **Linux**: Requires LibreOffice (`sudo apt-get install libreoffice`)
 
 ### Testing Considerations
 
@@ -246,7 +225,7 @@ Templates (`.dotx` files) provide:
 - <!-- # Sequential Thinking Prompt Rules -->
 <!-- # Purpose: Keep the agent organized, self-aware, and able to recover intelligently when facing complex or repetitive challenges. -->
 
-rules:
+## rules must consider always
 
 - At the beginning of every user request, organize your workflow as follows:
       1. After planning and before any major action, call `vibe_check`.

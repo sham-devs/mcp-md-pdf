@@ -50,6 +50,3 @@ Thumbs.db
 # Distribution
 *.whl
 /.claude
-
-# Docker
-data/

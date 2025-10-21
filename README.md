@@ -38,7 +38,6 @@ Choose the installation method that best fits your needs:
 | **uvx** (Option 1) | ❌ No | ✅ Yes (LibreOffice required) | Claude Desktop users |
 | **pip** (Option 2) | ❌ No | ✅ Yes (LibreOffice required) | Python package users |
 | **From Source** (Option 3) | ✅ Yes | ✅ Yes (LibreOffice required) | Developers |
-| **Docker** (Option 4) | ✅ Yes | ✅ Yes (included!) | Complete isolation |
 
 ### Option 1: Using `uvx` (Recommended - No Code Download Needed)
 
@@ -158,54 +157,6 @@ Add to your `claude_desktop_config.json`:
 
 ---
 
-### Option 4: Using Docker (Code Download Required for Build)
-
-**Best for:** Users who want everything pre-packaged (Python + LibreOffice + code).
-
-**Requirements:**
-- Docker Desktop
-- Git (to clone the repository)
-
-**What's Included:** Docker container includes Python, LibreOffice, and all dependencies. **No additional software needed!**
-
-**Installation:**
-```bash
-# Step 1: Clone the repository
-git clone https://github.com/yourusername/md-pdf-mcp.git
-cd md-pdf-mcp
-
-# Step 2: Build the Docker image
-docker build -t md-pdf-mcp .
-
-# Step 3: Test the container (optional)
-docker run -i --rm md-pdf-mcp
-
-# Or use docker-compose
-docker-compose up -d
-```
-
-**Note:** Docker supports **both DOCX and PDF conversion** out of the box (LibreOffice 25.2+ included).
-
-**Claude Desktop Setup:**
-
-Add to your `claude_desktop_config.json`:
-```json
-{
-  "mcpServers": {
-    "md-pdf": {
-      "command": "docker",
-      "args": ["run", "-i", "--rm", "md-pdf-mcp"]
-    }
-  }
-}
-```
-
-**Restart Claude Desktop** for changes to take effect.
-
-> 📖 See [Configuration section](#configuration) for config file location and alternative setups.
-
----
-
 ## **Configuration**
 
 ### Step 1: Find Your Configuration File
@@ -262,20 +213,6 @@ Open the configuration file and add the md-pdf-mcp server:
   }
 }
 ```
-
-**Option D: Using Docker**
-```json
-{
-  "mcpServers": {
-    "md-pdf": {
-      "command": "docker",
-      "args": ["run", "-i", "--rm", "md-pdf-mcp"]
-    }
-  }
-}
-```
-
-> **Note:** The `--rm` flag automatically removes the container after execution, preventing container accumulation.
 
 ### Step 3: Restart Claude Desktop
 
@@ -520,19 +457,12 @@ soffice --headless --version
 
 ---
 
-#### Docker Users
-
-✅ **No setup needed!** LibreOffice 25.2+ is pre-installed in the Docker image.
-
----
-
 ## **Platform Notes**
 
 * **DOCX Conversion:** Works on all platforms (Windows, macOS, Linux) - **no additional software required**
 * **PDF Conversion:** Cross-platform with automatic platform detection:
   - **Windows:** Uses Microsoft Word (if installed) or LibreOffice
   - **macOS/Linux:** Uses LibreOffice in headless mode
-  - **Docker:** LibreOffice 25.2+ included
 
 **Why LibreOffice for PDF?** LibreOffice preserves **ALL** DOCX formatting when converting to PDF:
 - ✅ Colors, backgrounds, and borders
