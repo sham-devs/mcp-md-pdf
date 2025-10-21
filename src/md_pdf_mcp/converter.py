@@ -147,7 +147,7 @@ class MarkdownConverter:
             if shutil.which('soffice') or shutil.which('libreoffice'):
                 return self._word_to_pdf_libreoffice(docx_path, pdf_path)
         else:
-            # Linux/macOS/Docker: Use LibreOffice (preserves formatting perfectly)
+            # Linux/macOS: Use LibreOffice (preserves formatting perfectly)
             if shutil.which('soffice') or shutil.which('libreoffice'):
                 return self._word_to_pdf_libreoffice(docx_path, pdf_path)
 
@@ -157,8 +157,7 @@ class MarkdownConverter:
             "Install LibreOffice:\n"
             "  - Ubuntu/Debian: sudo apt-get install libreoffice\n"
             "  - macOS: brew install --cask libreoffice\n"
-            "  - Windows: Download from https://www.libreoffice.org/download/\n"
-            "  - Docker: Use the provided Dockerfile (includes LibreOffice)"
+            "  - Windows: Download from https://www.libreoffice.org/download/"
         )
 
     def _is_word_installed(self) -> bool:

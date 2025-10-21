@@ -427,7 +427,7 @@ sudo apt-get install -y libreoffice libreoffice-writer
 sudo apt-get install -y fonts-liberation fonts-dejavu
 ```
 
-**For headless servers (Docker, CI/CD):**
+**For headless servers (CI/CD):**
 ```bash
 # Minimal installation without GUI components
 sudo apt-get install -y libreoffice-writer libreoffice-calc \
