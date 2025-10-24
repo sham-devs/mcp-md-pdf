@@ -41,7 +41,7 @@ git push origin v0.2.0
 
 ### 4. Monitor GitHub Actions
 
-1. Go to https://github.com/YOUR_USERNAME/mcp-md-pdf/actions
+1. Go to https://github.com/sham-devs/mcp-md-pdf/actions
 2. Watch the "Publish to PyPI" workflow run
 3. It will:
    - Build the package
