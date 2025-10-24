@@ -31,7 +31,7 @@ Go to: https://github.com/new
 
 #### 2. Push Code to GitHub
 
-Replace `YOUR_GITHUB_USERNAME` with your actual GitHub username:
+Replace `sham-devs` with your actual GitHub username:
 
 \`\`\`bash
 # Initialize git (if not already done)
@@ -43,8 +43,8 @@ git add .
 # Create initial commit
 git commit -m "Initial commit: mcp-md-pdf v0.1.0"
 
-# Add GitHub remote (REPLACE YOUR_GITHUB_USERNAME!)
-git remote add origin https://github.com/YOUR_GITHUB_USERNAME/mcp-md-pdf.git
+# Add GitHub remote (REPLACE sham-devs!)
+git remote add origin https://github.com/sham-devs/mcp-md-pdf.git
 
 # Push to GitHub
 git branch -M main
@@ -53,7 +53,7 @@ git push -u origin main
 
 #### 3. Update README Badges
 
-Edit `README.md` and replace `YOUR_GITHUB_USERNAME` with your actual username in the badge URLs (lines 5-6).
+Edit `README.md` and replace `sham-devs` with your actual username in the badge URLs (lines 5-6).
 
 ---
 
@@ -79,7 +79,7 @@ This is the MODERN way (2025) - no API tokens needed!
 2. Click "Add a new pending publisher"
 3. Fill in:
    - **PyPI Project Name:** `mcp-md-pdf`
-   - **Owner:** `YOUR_GITHUB_USERNAME`
+   - **Owner:** `sham-devs`
    - **Repository name:** `mcp-md-pdf`
    - **Workflow name:** `publish.yml`
    - **Environment name:** `testpypi`
@@ -90,7 +90,7 @@ This is the MODERN way (2025) - no API tokens needed!
 2. Click "Add a new pending publisher"
 3. Fill in:
    - **PyPI Project Name:** `mcp-md-pdf`
-   - **Owner:** `YOUR_GITHUB_USERNAME`
+   - **Owner:** `sham-devs`
    - **Repository name:** `mcp-md-pdf`
    - **Workflow name:** `publish.yml`
    - **Environment name:** `pypi`
@@ -102,7 +102,7 @@ This is the MODERN way (2025) - no API tokens needed!
 
 Create two environments in your GitHub repository:
 
-1. Go to: https://github.com/YOUR_GITHUB_USERNAME/mcp-md-pdf/settings/environments
+1. Go to: https://github.com/sham-devs/mcp-md-pdf/settings/environments
 2. Click "New environment"
 3. Name: `testpypi` → Click "Configure environment"
 4. Click "New environment" again
@@ -154,7 +154,7 @@ git push origin v0.1.0
 
 #### 3. Watch It Happen!
 
-1. Go to: https://github.com/YOUR_GITHUB_USERNAME/mcp-md-pdf/actions
+1. Go to: https://github.com/sham-devs/mcp-md-pdf/actions
 2. You'll see "Publish to PyPI" workflow running
 3. It will:
    - Build your package
@@ -204,8 +204,8 @@ mcp-md-pdf --help
 
 ### Viewing Results
 
-- **Tests:** https://github.com/YOUR_GITHUB_USERNAME/mcp-md-pdf/actions/workflows/tests.yml
-- **Releases:** https://github.com/YOUR_GITHUB_USERNAME/mcp-md-pdf/actions/workflows/publish.yml
+- **Tests:** https://github.com/sham-devs/mcp-md-pdf/actions/workflows/tests.yml
+- **Releases:** https://github.com/sham-devs/mcp-md-pdf/actions/workflows/publish.yml
 
 ---
 

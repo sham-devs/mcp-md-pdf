@@ -2,7 +2,7 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/mcp-md-pdf.svg)](https://pypi.org/project/mcp-md-pdf/)
 [![Python Versions](https://img.shields.io/pypi/pyversions/mcp-md-pdf.svg)](https://pypi.org/project/mcp-md-pdf/)
-[![Tests](https://github.com/YOUR_GITHUB_USERNAME/mcp-md-pdf/actions/workflows/tests.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/mcp-md-pdf/actions/workflows/tests.yml)
+[![Tests](https://github.com/sham-devs/mcp-md-pdf/actions/workflows/tests.yml/badge.svg)](https://github.com/sham-devs/mcp-md-pdf/actions/workflows/tests.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A simple, reliable Model Context Protocol (MCP) server that converts Markdown files into professional Word (.docx) and PDF documents — with full support for `.dotx` templates.
@@ -132,7 +132,7 @@ Add to your `claude_desktop_config.json`:
 **Installation:**
 ```bash
 # Step 1: Clone the repository
-git clone https://github.com/yourusername/mcp-md-pdf.git
+git clone https://github.com/sham-devs/mcp-md-pdf.git
 cd mcp-md-pdf
 
 # Step 2: Install in development mode
@@ -493,7 +493,7 @@ soffice --headless --version
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/mcp-md-pdf.git
+git clone https://github.com/sham-devs/mcp-md-pdf.git
 cd mcp-md-pdf
 
 # Install with dev dependencies

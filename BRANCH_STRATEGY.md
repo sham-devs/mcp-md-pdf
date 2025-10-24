@@ -156,7 +156,7 @@ git push origin main --tags
    ```
 
 3. **Set main as default branch on GitHub:**
-   - Go to: https://github.com/YOUR_USERNAME/mcp-md-pdf/settings
+   - Go to: https://github.com/sham-devs/mcp-md-pdf/settings
    - Under "Default branch", select `main`
 
 4. **Optional: Delete master-old after confirming everything works:**
