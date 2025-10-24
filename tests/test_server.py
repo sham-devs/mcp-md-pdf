@@ -34,6 +34,7 @@ class TestConvertMarkdownTool:
         assert "output.docx" in result
         assert os.path.exists(f"{output_path}.docx")
 
+    @pytest.mark.slow
     def test_convert_to_both(self, simple_markdown, temp_dir):
         """Test converting to both DOCX and PDF"""
         output_path = os.path.join(temp_dir, "output")

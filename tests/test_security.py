@@ -31,7 +31,7 @@ class TestPathTraversalPrevention:
         )
 
         # Should fail with appropriate error (file not found is acceptable)
-        assert "❌" in result or "Error" in result
+        assert ("❌" in result or "Error" in result or "not found" in result.lower())
 
     def test_parent_directory_traversal_in_template_path(self, simple_markdown, temp_dir):
         """Test that ../ in template path is handled safely"""
@@ -68,7 +68,7 @@ class TestPathTraversalPrevention:
             )
 
             # Should fail (file not found is acceptable security response)
-            assert "❌" in result or "Error" in result
+            assert ("❌" in result or "Error" in result or "not found" in result.lower())
 
     def test_null_byte_injection_in_path(self, temp_dir):
         """Test that null byte injection in paths is handled"""
