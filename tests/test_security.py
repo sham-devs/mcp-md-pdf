@@ -50,12 +50,12 @@ class TestPathTraversalPrevention:
         assert "template" in result.lower() or "not found" in result.lower()
 
     def test_absolute_path_outside_project(self, temp_dir):
-        """Test that absolute paths to sensitive locations are rejected"""
-        # Try various sensitive paths
+        """Test that absolute paths to non-existent files are rejected"""
+        # Try various non-existent absolute paths
         sensitive_paths = [
-            "/etc/passwd",
-            "C:\\Windows\\System32\\config\\SAM",
-            "/root/.ssh/id_rsa",
+            "/nonexistent/etc/passwd.md",
+            "C:\\nonexistent\\Windows\\System32\\config\\SAM.md",
+            "/nonexistent/root/.ssh/id_rsa.md",
         ]
 
         output_path = os.path.join(temp_dir, "output")

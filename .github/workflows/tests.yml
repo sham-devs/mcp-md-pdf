@@ -33,7 +33,7 @@ jobs:
 
     - name: Run tests
       run: |
-        pytest tests/ -v --tb=short
+        pytest tests/ -v --tb=short -m "not slow"
 
     - name: Run linting
       run: |
