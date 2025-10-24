@@ -1,3 +1,3 @@
 """
-Test suite for md-pdf-mcp converter
+Test suite for mcp-md-pdf converter
 """

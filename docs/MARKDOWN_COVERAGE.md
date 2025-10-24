@@ -1,6 +1,6 @@
 # Markdown Coverage Report
 
-**Project:** md-pdf-mcp
+**Project:** mcp-md-pdf
 **Date:** 2025-10-20
 **Specification:** CommonMark 0.31.2 + GitHub Flavored Markdown (GFM)
 
@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-The md-pdf-mcp converter supports **95% of CommonMark core features** and **80% of extended/GFM features**. All essential document elements (headings, formatting, lists, tables, code, quotes) are functional. Visual styling for code blocks and blockquotes is professionally enhanced with backgrounds and borders.
+The mcp-md-pdf converter supports **95% of CommonMark core features** and **80% of extended/GFM features**. All essential document elements (headings, formatting, lists, tables, code, quotes) are functional. Visual styling for code blocks and blockquotes is professionally enhanced with backgrounds and borders.
 
 ### Quick Stats
 
@@ -441,7 +441,7 @@ def hello():
 
 ## Comparison with CommonMark Spec
 
-| Feature | CommonMark Required | md-pdf-mcp Support |
+| Feature | CommonMark Required | mcp-md-pdf Support |
 |---------|---------------------|-------------------|
 | ATX Headings | Required | ✅ Full |
 | Setext Headings | Required | ❌ Not supported |
@@ -602,7 +602,7 @@ def add_inline_code_styling(run):
 
 ## Conclusion
 
-The md-pdf-mcp converter provides **excellent coverage of core Markdown features** with professional rendering. The main areas for improvement are:
+The mcp-md-pdf converter provides **excellent coverage of core Markdown features** with professional rendering. The main areas for improvement are:
 
 1. **Extended Features:** Footnotes, syntax highlighting, clickable links are missing
 2. **Edge Cases:** 4-space indented code blocks not supported

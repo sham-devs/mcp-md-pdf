@@ -1,6 +1,6 @@
 # Test Suite Documentation
 
-This directory contains the comprehensive test suite for the md-pdf-mcp converter.
+This directory contains the comprehensive test suite for the mcp-md-pdf converter.
 
 ## Overview
 

@@ -1,4 +1,9 @@
-# **MD-PDF-MCP: Markdown to Word/PDF Converter**
+# **MCP-MD-PDF: Markdown to Word/PDF Converter**
+
+[![PyPI version](https://img.shields.io/pypi/v/mcp-md-pdf.svg)](https://pypi.org/project/mcp-md-pdf/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/mcp-md-pdf.svg)](https://pypi.org/project/mcp-md-pdf/)
+[![Tests](https://github.com/YOUR_GITHUB_USERNAME/mcp-md-pdf/actions/workflows/tests.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/mcp-md-pdf/actions/workflows/tests.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A simple, reliable Model Context Protocol (MCP) server that converts Markdown files into professional Word (.docx) and PDF documents — with full support for `.dotx` templates.
 
@@ -53,7 +58,7 @@ Choose the installation method that best fits your needs:
 **Installation:**
 ```bash
 # No code download needed - uvx handles everything
-uvx md-pdf-mcp
+uvx mcp-md-pdf
 ```
 
 **Claude Desktop Setup:**
@@ -64,7 +69,7 @@ Add to your `claude_desktop_config.json`:
   "mcpServers": {
     "md-pdf": {
       "command": "uvx",
-      "args": ["md-pdf-mcp"]
+      "args": ["mcp-md-pdf"]
     }
   }
 }
@@ -89,10 +94,10 @@ Add to your `claude_desktop_config.json`:
 **Installation:**
 ```bash
 # Install from PyPI (when published)
-pip install md-pdf-mcp
+pip install mcp-md-pdf
 
 # Or install with development dependencies
-pip install "md-pdf-mcp[dev]"
+pip install "mcp-md-pdf[dev]"
 ```
 
 **Claude Desktop Setup:**
@@ -127,8 +132,8 @@ Add to your `claude_desktop_config.json`:
 **Installation:**
 ```bash
 # Step 1: Clone the repository
-git clone https://github.com/yourusername/md-pdf-mcp.git
-cd md-pdf-mcp
+git clone https://github.com/yourusername/mcp-md-pdf.git
+cd mcp-md-pdf
 
 # Step 2: Install in development mode
 pip install -e .
@@ -173,7 +178,7 @@ Add to your `claude_desktop_config.json`:
 
 ### Step 2: Add MCP Server
 
-Open the configuration file and add the md-pdf-mcp server:
+Open the configuration file and add the mcp-md-pdf server:
 
 **Option A: Using uvx (Recommended)**
 ```json
@@ -181,7 +186,7 @@ Open the configuration file and add the md-pdf-mcp server:
   "mcpServers": {
     "md-pdf": {
       "command": "uvx",
-      "args": ["md-pdf-mcp"]
+      "args": ["mcp-md-pdf"]
     }
   }
 }
@@ -207,7 +212,7 @@ Open the configuration file and add the md-pdf-mcp server:
       "command": "python",
       "args": ["-m", "md_pdf_mcp.server"],
       "env": {
-        "PYTHONPATH": "/path/to/md-pdf-mcp"
+        "PYTHONPATH": "/path/to/mcp-md-pdf"
       }
     }
   }
@@ -488,8 +493,8 @@ soffice --headless --version
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/md-pdf-mcp.git
-cd md-pdf-mcp
+git clone https://github.com/yourusername/mcp-md-pdf.git
+cd mcp-md-pdf
 
 # Install with dev dependencies
 pip install -e ".[dev]"
@@ -624,7 +629,7 @@ sudo dnf install libreoffice
 
 **Fix:**
 * Run `pip install -e .` from the project directory
-* Or install from PyPI: `pip install md-pdf-mcp`
+* Or install from PyPI: `pip install mcp-md-pdf`
 
 ### Testing with MCP Inspector
 

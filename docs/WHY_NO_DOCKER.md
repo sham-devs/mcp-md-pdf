@@ -11,7 +11,7 @@ This document explains our journey with Docker and why we ultimately decided tha
 - ✅ **Native deployment works perfectly**: Direct filesystem access, simple setup, fast execution
 - ❌ **Docker deployment fails fundamentally**: Requires complex volume configuration, path translation, and defeats the tool's purpose
 
-**For developers:** Continue using native Python installation (`pip install md-pdf-mcp` or `uvx md-pdf-mcp`)
+**For developers:** Continue using native Python installation (`pip install mcp-md-pdf` or `uvx mcp-md-pdf`)
 **For CI/CD:** Docker can still be used for testing in isolated environments
 
 ---
@@ -90,12 +90,12 @@ CMD ["python", "-m", "md_pdf_mcp.server"]
 ```json
 {
   "mcpServers": {
-    "md-pdf-mcp": {
+    "mcp-md-pdf": {
       "command": "docker",
       "args": [
         "run", "-i", "--rm",
         "-v", "C:\\Users\\YOUR_USERNAME\\Documents:/workspace",
-        "md-pdf-mcp"
+        "mcp-md-pdf"
       ]
     }
   }
@@ -137,9 +137,9 @@ We adopted Docker's recommended "ephemeral pattern" for MCP servers:
 ```json
 {
   "mcpServers": {
-    "md-pdf-mcp": {
+    "mcp-md-pdf": {
       "command": "docker",
-      "args": ["run", "-i", "--rm", "-v", "/local:/workspace", "md-pdf-mcp"]
+      "args": ["run", "-i", "--rm", "-v", "/local:/workspace", "mcp-md-pdf"]
     }
   }
 }
@@ -287,13 +287,13 @@ User: "Convert my Downloads/report.md with template from Documents/template.dotx
 **Theoretical Solution**:
 ```json
 {
-  "md-pdf-mcp": {
+  "mcp-md-pdf": {
     "command": "docker",
     "args": [
       "run", "-i", "--rm",
       "-v", "C:\\Users:/Users",
       "-v", "C:\\Documents:/Documents",
-      "md-pdf-mcp"
+      "mcp-md-pdf"
     ]
   }
 }
@@ -334,7 +334,7 @@ If we mount everything, why use Docker?
 #### 5. **Simpler Native Alternative**
 ```bash
 # Native installation
-pip install md-pdf-mcp
+pip install mcp-md-pdf
 
 # Done! Works with ANY file path immediately.
 ```
@@ -349,7 +349,7 @@ We built and tested **SEVEN** approaches:
 
 | Image | Size | Result |
 |-------|------|--------|
-| **md-pdf-mcp:pandoc-official** | **1.03 GB** | ✅ Smallest (but formatting issues) |
+| **mcp-md-pdf:pandoc-official** | **1.03 GB** | ✅ Smallest (but formatting issues) |
 | pandoc/latex (base only) | **782 MB** | Base image |
 | Debian + LibreOffice | **1.14 GB** | ✅ Best option (preserves formatting) |
 | Pandoc + Debian (our build) | **1.35 GB** | ❌ Inefficient TeXLive install |
@@ -485,9 +485,9 @@ From GitHub Issues:
 // claude_desktop_config.json
 {
   "mcpServers": {
-    "md-pdf-mcp": {
+    "mcp-md-pdf": {
       "command": "uvx",
-      "args": ["md-pdf-mcp"]
+      "args": ["mcp-md-pdf"]
     }
   }
 }
@@ -498,7 +498,7 @@ From GitHub Issues:
    - Windows: Download from libreoffice.org or use Microsoft Word
    - macOS: `brew install --cask libreoffice`
    - Linux: `sudo apt-get install libreoffice`
-2. `pip install md-pdf-mcp` or use `uvx md-pdf-mcp`
+2. `pip install mcp-md-pdf` or use `uvx mcp-md-pdf`
 3. Configure Claude Desktop (above)
 4. Done - works with files ANYWHERE on system
 
@@ -521,9 +521,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build Docker image
-        run: docker build -t md-pdf-mcp:test .
+        run: docker build -t mcp-md-pdf:test .
       - name: Run tests
-        run: docker run --rm md-pdf-mcp:test pytest -m "not slow"
+        run: docker run --rm mcp-md-pdf:test pytest -m "not slow"
 ```
 
 **Why this works**:

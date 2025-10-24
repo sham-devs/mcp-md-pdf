@@ -1,5 +1,5 @@
 """
-Pytest configuration and shared fixtures for md-pdf-mcp tests
+Pytest configuration and shared fixtures for mcp-md-pdf tests
 """
 import os
 import pytest
@@ -22,7 +22,7 @@ def sample_markdown(temp_dir):
     """Create a sample markdown file for testing"""
     md_content = """# Test Document
 
-This is a test document for the md-pdf-mcp converter.
+This is a test document for the mcp-md-pdf converter.
 
 ## Features Tested
 

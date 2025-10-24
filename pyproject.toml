@@ -3,7 +3,7 @@ requires = ["setuptools>=45", "wheel", "setuptools-scm[toml]>=6.2"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "md-pdf-mcp"
+name = "mcp-md-pdf"
 version = "0.1.0"
 description = "Model Context Protocol server for Markdown to Word/PDF conversion with template support"
 readme = "README.md"
@@ -39,12 +39,12 @@ dev = [
 ]
 
 [project.scripts]
-md-pdf-mcp = "md_pdf_mcp.server:main"
+mcp-md-pdf = "md_pdf_mcp.server:main"
 
 [project.urls]
-Homepage = "https://github.com/yourusername/md-pdf-mcp"
-Repository = "https://github.com/yourusername/md-pdf-mcp"
-Issues = "https://github.com/yourusername/md-pdf-mcp/issues"
+Homepage = "https://github.com/yourusername/mcp-md-pdf"
+Repository = "https://github.com/yourusername/mcp-md-pdf"
+Issues = "https://github.com/yourusername/mcp-md-pdf/issues"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
